@@ -3,9 +3,9 @@ const configuracaoSQL = require('./models/ConexaoSQL');
 
 module.exports = {
   
-    async SQL_InserirArquivos (request, response){
+    async SQL_InserirComentario (request, response){
        
-      const {NomeArquivo, Categoria, URls, NumeroCurtidas, IdAluno_Arquivos} = request.body; 
+      const {Texto, IdAluno, IdArquivo} = request.body; 
         
 
       const data = new Date();
@@ -21,22 +21,22 @@ module.exports = {
                   
         var req =  new sql.Request(conn);
     
-        var comando = `  INSERT INTO [ProvIna_Database].[dbo].[Arquivo] (IdAluno_Arquivos,NomeArquivo, Categoria, DataCriacao, URLs, NumeroCurtidas)
-                          VALUES (${IdAluno_Arquivos},'${NomeArquivo}','${Categoria}',${DataCriacao},'${URls}',${NumeroCurtidas});`;
+        var comando = `  INSERT INTO [ProvIna_Database].[dbo].[Comentario] (Texto, Data, IdArquivo, IdAluno)
+                          VALUES (${Texto},'${DataCriacao}',${IdArquivo},${IdAluno});`;
           
         req.query(comando, function (err, resposta) {
             
           if(err) throw err;
 
-            response.json("Arquivo inserido.");
+            response.json("Comentario inserido.");
             conn.close();
           });  
         });
     },
 
-    async SQL_DeletarArquivo (request, response){
+    async SQL_DeletarComentario (request, response){
        
-      const {IdArquivo} = request.body; 
+      const {IdComentario} = request.body; 
      
       var conn = new sql.ConnectionPool(configuracaoSQL);
 
@@ -48,21 +48,21 @@ module.exports = {
                   
         var req =  new sql.Request(conn);
     
-        var comando = `DELETE FROM [ProvIna_Database].[dbo].[Arquivo]  WHERE IdArquivos = ${IdArquivo};`;
+        var comando = `DELETE FROM [ProvIna_Database].[dbo].[Comentario]  WHERE IdComentario = ${IdComentario};`;
           
         req.query(comando, function (err, resposta) {
             
           if(err) throw err;
 
-            response.json("Arquivo deletado.");
+            response.json("Comentario deletado.");
             conn.close();
           });  
         });
     },
 
-    async SQL_BuscarArquivo (request, response){
+    async SQL_BuscarComentarios (request, response){
        
-      const {IdAluno_Arquivos} = request.body; 
+      const {IdAluno,IdArquivo} = request.body; 
      
       var conn = new sql.ConnectionPool(configuracaoSQL);
 
@@ -74,7 +74,7 @@ module.exports = {
                   
         var req =  new sql.Request(conn);
     
-        var comando = `SELECT * FROM [ProvIna_Database].[dbo].[Arquivo] `;
+        var comando = `SELECT * FROM [ProvIna_Database].[dbo].[Comentario] WHERE [IdAluno] = ${IdAluno} AND IdArquivo = ${IdArquivo};`;
           
         req.query(comando, function (err, resposta) {
             

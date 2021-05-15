@@ -12,6 +12,6 @@ routes.post('/Login', modulo_login.SQL_Login);
 routes.post('/arquivoInserir', modulo_arquivo.SQL_InserirArquivos);
 //routesl.delete('/arquivoDeletar', modulo_arquivo.SQL_DeletarArquivo);
 routes.post('/arquivoDeletar', modulo_arquivo.SQL_DeletarArquivo);
-routes.post('/arquivoBuscar', modulo_arquivo.SQL_BuscarArquivo);
+routes. get('/arquivo', modulo_arquivo.SQL_BuscarArquivo);
 
 module.exports = routes;
