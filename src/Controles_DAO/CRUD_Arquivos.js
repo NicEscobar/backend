@@ -36,8 +36,10 @@ module.exports = {
 
     async SQL_DeletarArquivo (request, response){
        
-      const {IdArquivo} = request.body; 
+      const IdArquivo = request.params.IdArquivo; 
      
+      //console.log("IdArquivo", IdArquivo)
+
       var conn = new sql.ConnectionPool(configuracaoSQL);
 
       conn.connect(function(err){
@@ -60,9 +62,37 @@ module.exports = {
         });
     },
 
+    async SQL_BuscarTodosArquivos (request, response){
+     
+      var conn = new sql.ConnectionPool(configuracaoSQL);
+
+      conn.connect(function(err){
+  
+        if (err) throw err;
+  
+        console.log("Conectado!")
+                  
+        var req =  new sql.Request(conn);
+
+        var comando = `SELECT * FROM [ProvIna_Database].[dbo].[Arquivo] `;
+          
+        req.query(comando, function (err, resposta) {
+            
+          if(err) throw err;
+          
+          response.json(resposta.recordset);
+          
+          conn.close();
+          });  
+      });
+    },
     async SQL_BuscarArquivo (request, response){
        
-      const {IdAluno_Arquivos} = request.body; 
+      
+      const IdArquivo = request.params.IdArquivo
+      const {IdAluno_Arquivos} = request.query;
+
+      console.log("IdAluno_Arquivos",IdAluno_Arquivos)
      
       var conn = new sql.ConnectionPool(configuracaoSQL);
 
@@ -74,7 +104,37 @@ module.exports = {
                   
         var req =  new sql.Request(conn);
     
-        var comando = `SELECT * FROM [ProvIna_Database].[dbo].[Arquivo] `;
+        var comando = `SELECT * FROM [ProvIna_Database].[dbo].[Arquivo]
+                       WHERE IdAluno_Arquivos = ${IdAluno_Arquivos}
+                        AND IdArquivos = ${IdArquivo}`;
+          
+        req.query(comando, function (err, resposta) {
+            
+          if(err) throw err;
+
+            response.json(resposta.recordset);
+            conn.close();
+          });  
+        });
+    },
+    async SQL_BuscarCategoria (request, response){
+       
+      const {Categoria} = request.query;
+
+      console.log("Categoria",Categoria)
+     
+      var conn = new sql.ConnectionPool(configuracaoSQL);
+
+      conn.connect(function(err){
+  
+        if (err) throw err;
+  
+        console.log("Conectado!")
+                  
+        var req =  new sql.Request(conn);
+    
+        var comando = `SELECT * FROM [ProvIna_Database].[dbo].[Arquivo]
+                       WHERE [Categoria] = '${Categoria}'`;
           
         req.query(comando, function (err, resposta) {
             

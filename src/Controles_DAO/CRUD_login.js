@@ -6,8 +6,11 @@ var Aluno = Object.create(null);
 module.exports = {
   
     async SQL_Login (request, response){
-       
-        const {Senha, Email} = request.body; 
+        
+        const Email = request.params.email; 
+        const {Senha} = request.query; 
+
+        console.log("Senha",Email);
   
         var conn = new sql.ConnectionPool(configuracaoSQL);
         
